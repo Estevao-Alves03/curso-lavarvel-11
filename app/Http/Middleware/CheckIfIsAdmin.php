@@ -16,10 +16,11 @@ class CheckIfIsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->isAdm()) {
+        if(Auth::user()->isAdm()){
             return $next($request);
         }
 
-        return redirect()->route('home');
+        return back()->with('message', 'Somente administradores podem excluir contas');
+
     }
 }

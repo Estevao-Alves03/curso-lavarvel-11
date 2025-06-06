@@ -8,7 +8,6 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -58,5 +57,32 @@ class UserController extends Controller
         ->route('users.index')
         ->with('success', 'usuario editado com sucesso');
 
+    }
+
+    public function show(string $id){
+
+        if(!$user = User::find($id)){
+            return back()->with('message', 'Usuario nao encontrado');
+        }
+
+        return view('admin.users.show',compact('user'));
+
+    }
+
+    public function destroy(string $id){
+        
+        if(!$user = User::find($id)){
+            return back()->with('message', 'Usuario nao encontrado');
+        }
+
+        if (Auth::user()->id === $user->id) {
+           return back()->with('message', 'voce nao pode deletar seu proprio usuario');
+        }
+
+        $user->delete();
+
+        return redirect()
+        ->route('users.index')
+        ->with('success', 'Usuario deletado com sucesso');
     }
 }
