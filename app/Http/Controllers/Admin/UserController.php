@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -70,6 +71,12 @@ class UserController extends Controller
     }
 
     public function destroy(string $id){
+
+        // Verifica se nao tem permissao para fazer algo (denies)
+        // if(Gate::denies('is-admin')){
+        //     return back()->with('message', 'voce nao é um administrador');
+        // }
+        // existe o metodo allows, que testa para ver se voce tem permissao para fazer algo
         
         if(!$user = User::find($id)){
             return back()->with('message', 'Usuario nao encontrado');
